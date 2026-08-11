@@ -1,0 +1,26 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: nonprod-devfront
+  namespace: argocd
+spec:
+  description: Non-production applications owned by devfront, rendered from applications/devfront/*/overlays/nonprod
+
+  sourceRepos:
+    - https://github.com/CHANGEME/gitops-apps.git
+
+  # Hard guardrail on the [environment]-[team]-[application] namespace
+  # convention: a nonprod devfront Application can only ever land in a
+  # nonprod-devfront-* namespace.
+  destinations:
+    - server: https://kubernetes.default.svc
+      namespace: 'nonprod-devfront-*'
+
+  # Tighten these if you want to forbid apps from shipping cluster-scoped
+  # resources. Namespace must stay allowed for CreateNamespace=true to work.
+  clusterResourceWhitelist:
+    - group: '*'
+      kind: '*'
+  namespaceResourceWhitelist:
+    - group: '*'
+      kind: '*'

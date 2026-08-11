@@ -1,0 +1,14 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+labels:
+  - pairs:
+      app.kubernetes.io/name: whoami
+
+resources:
+  - deployment.yaml
+  - service.yaml
+
+images:
+  - name: traefik/whoami
+    newTag: v1.10.4

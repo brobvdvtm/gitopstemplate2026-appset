@@ -1,0 +1,26 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: prod-devfront
+  namespace: argocd
+spec:
+  description: Production applications owned by devfront, rendered from applications/devfront/*/overlays/prod
+
+  sourceRepos:
+    - https://github.com/CHANGEME/gitops-apps.git
+
+  # Hard guardrail on the [environment]-[team]-[application] namespace
+  # convention: a prod devfront Application can only ever land in a
+  # prod-devfront-* namespace.
+  destinations:
+    - server: https://kubernetes.default.svc
+      namespace: 'prod-devfront-*'
+
+  # Tighten these if you want to forbid apps from shipping cluster-scoped
+  # resources. Namespace must stay allowed for CreateNamespace=true to work.
+  clusterResourceWhitelist:
+    - group: '*'
+      kind: '*'
+  namespaceResourceWhitelist:
+    - group: '*'
+      kind: '*'

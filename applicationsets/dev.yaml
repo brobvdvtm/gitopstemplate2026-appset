@@ -1,0 +1,64 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: dev
+  namespace: argocd
+spec:
+  goTemplate: true
+  goTemplateOptions:
+    - missingkey=error
+
+  generators:
+    # Discovers every application, of every team, that ships a `dev` overlay.
+    # The two globs are the team level and the application level; `*` never
+    # matches a `/`, so this can only match applications/<team>/<app>/overlays/dev
+    # and never a shallower or deeper path.
+    - git:
+        repoURL: https://github.com/CHANGEME/gitops-apps.git
+        revision: main
+        directories:
+          - path: applications/*/*/overlays/dev
+
+  template:
+    metadata:
+      # path.segments = [applications, <team>, <app>, overlays, dev]
+      #                                index 1  index 2
+      # Team and application are read positionally out of the directory
+      # hierarchy, never out of the overlay's manifests.
+      name: 'dev-{{ index .path.segments 1 }}-{{ index .path.segments 2 }}'
+      labels:
+        app.kubernetes.io/name: '{{ index .path.segments 2 }}'
+        app.kubernetes.io/instance: 'dev-{{ index .path.segments 1 }}-{{ index .path.segments 2 }}'
+        app.kubernetes.io/part-of: '{{ index .path.segments 1 }}'
+        environment: dev
+        team: '{{ index .path.segments 1 }}'
+      finalizers:
+        - resources-finalizer.argocd.argoproj.io
+    spec:
+      # Per-team AppProject. projects/<team>/dev.yaml restricts destinations to
+      # dev-<team>-*, so this Application cannot sync into another team's
+      # namespace even though one ApplicationSet now spans every team.
+      # A new team directory with no matching AppProject generates Applications
+      # that fail to sync; scripts/validate.sh checks for that.
+      project: 'dev-{{ index .path.segments 1 }}'
+      source:
+        repoURL: https://github.com/CHANGEME/gitops-apps.git
+        targetRevision: main
+        path: '{{ .path.path }}'
+      destination:
+        server: https://kubernetes.default.svc
+        # [environment]-[team]-[application]
+        namespace: 'dev-{{ index .path.segments 1 }}-{{ index .path.segments 2 }}'
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
+          - ServerSideApply=true
+        retry:
+          limit: 5
+          backoff:
+            duration: 10s
+            factor: 2
+            maxDuration: 3m

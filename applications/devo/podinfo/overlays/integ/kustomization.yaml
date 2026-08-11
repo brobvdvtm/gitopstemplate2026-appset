@@ -1,0 +1,28 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+# NOTE: do not set `namespace:` here.
+# The namespace is owned by the ApplicationSet destination ([overlay]-[app]).
+
+labels:
+  - pairs:
+      environment: integ
+    # keep selectors stable; label pods too
+    includeSelectors: false
+    includeTemplates: true
+
+resources:
+  - ../../base
+
+replicas:
+  - name: podinfo
+    count: 2
+
+patches:
+  - target:
+      kind: Deployment
+      name: podinfo
+    patch: |-
+      - op: replace
+        path: /spec/template/spec/containers/0/env/0/value
+        value: "integ"
