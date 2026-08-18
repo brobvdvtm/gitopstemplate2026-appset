@@ -1,0 +1,153 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: preview
+  namespace: argocd
+spec:
+  goTemplate: true
+  goTemplateOptions:
+    - missingkey=error
+
+  generators:
+    # Ephemeral environments are the one case where the deployed set is not a
+    # function of this repo's contents alone: it is (applications that opted in)
+    # x (their open pull requests). That product is the matrix generator.
+    - matrix:
+        generators:
+          # Leg 1 — which applications opt into previews, and which Azure
+          # DevOps repository backs each one. An application joins by adding
+          # applications/<team>/<app>/preview.yaml; nothing here changes, and
+          # neither does anything under projects/.
+          #
+          # The file's keys (azureDevOpsProject, azureDevOpsRepo, image) become
+          # template parameters alongside .path. Because of missingkey=error, a
+          # preview.yaml missing one of them fails THIS ENTIRE ApplicationSet,
+          # taking every other team's previews down with it — scripts/validate.sh
+          # rejects that before it can be committed.
+          - git:
+              repoURL: https://github.com/CHANGEME/gitops-apps.git
+              revision: main
+              files:
+                - path: applications/*/*/preview.yaml
+
+          # Leg 2 — the open pull requests of the repository named by leg 1.
+          # The provider fields are interpolated from leg 1's parameters, which
+          # is what lets a single ApplicationSet span every team and
+          # application instead of needing one file per previewable app.
+          - pullRequest:
+              azuredevops:
+                organization: CHANGEME-org
+                project: '{{ .azureDevOpsProject }}'
+                repo: '{{ .azureDevOpsRepo }}'
+                api: https://dev.azure.com/
+                # kubectl create secret generic azure-devops-pat -n argocd \
+                #   --from-literal=token=<PAT with Code: Read on every repo above>
+                tokenRef:
+                  secretName: azure-devops-pat
+                  key: token
+                # The opt-in gate, and the fix for the build race. An
+                # Application templates <image>:<head_short_sha>, but that tag
+                # does not exist until the pipeline has pushed it. Have the
+                # pipeline add this label only AFTER the push, and a preview is
+                # never generated for an image that cannot be pulled yet.
+                labels:
+                  - preview
+
+              # Azure DevOps has no webhook support in the pull request
+              # generator — unlike GitHub and GitLab, which can be pushed to.
+              # This poll interval therefore IS the feedback loop: a new commit
+              # on a pull request is picked up within five minutes and never
+              # faster. Lowering it multiplies API calls by the number of
+              # repositories in leg 1, against one PAT's rate limit.
+              requeueAfterSeconds: 300
+
+  template:
+    metadata:
+      # path.segments = [applications, <team>, <app>]  — the directory holding
+      #                                index 1  index 2   preview.yaml.
+      # One segment shorter than the environment ApplicationSets (which match a
+      # directory two levels deeper) but read the same way: positionally.
+      name: 'preview-{{ index .path.segments 1 }}-{{ index .path.segments 2 }}-pr-{{ .number }}'
+      labels:
+        app.kubernetes.io/name: '{{ index .path.segments 2 }}'
+        app.kubernetes.io/instance: 'preview-{{ index .path.segments 1 }}-{{ index .path.segments 2 }}-pr-{{ .number }}'
+        app.kubernetes.io/part-of: '{{ index .path.segments 1 }}'
+        environment: preview
+        team: '{{ index .path.segments 1 }}'
+        pull-request: '{{ .number }}'
+      finalizers:
+        - resources-finalizer.argocd.argoproj.io
+    spec:
+      # Reuses the team's existing dev AppProject. Its destination wildcard is
+      # dev-<team>-*, which already covers dev-<team>-<app>-pr-<n>, so previews
+      # need no AppProject of their own and adding a team stays a two-directory
+      # change. Consequence worth knowing: whoever holds Argo CD RBAC over
+      # dev-<team>/* holds it over that team's previews too.
+      project: 'dev-{{ index .path.segments 1 }}'
+      source:
+        repoURL: https://github.com/CHANGEME/gitops-apps.git
+        # Manifests always come from main. The pull request lives in the
+        # application's SOURCE repo, not in this one, and contributes exactly
+        # one thing to the deployment: the commit SHA used as the image tag.
+        targetRevision: main
+        # Previews reuse the dev overlay verbatim rather than shipping an
+        # ephemeral overlay into git. Nothing about a preview exists in this
+        # repo, so previews cannot leave dead directories behind, and
+        # scripts/validate.sh keeps working unchanged.
+        path: 'applications/{{ index .path.segments 1 }}/{{ index .path.segments 2 }}/overlays/dev'
+        kustomize:
+          # The whole point of the preview: run the candidate branch's build.
+          #
+          # head_short_sha is 8 characters. If the pipeline tags with 7, use
+          # head_short_sha_7; if it tags with the full SHA, use head_sha. This
+          # must match the pipeline's tagging exactly — a mismatch is not an
+          # error, it is an ImagePullBackOff.
+          images:
+            - '{{ .image }}:{{ .head_short_sha }}'
+
+          # The dev overlay stamps environment=dev on every resource it
+          # renders. Left alone, previews would answer to anything selecting
+          # environment=dev — dashboards, NetworkPolicies, cleanup jobs.
+          #
+          # Verified with kustomize 5.7.1: a JSON patch CANNOT fix this, because
+          # the overlay's `labels:` transformer runs after patches and stamps
+          # `dev` back over it. commonLabels wins because it lands as a second
+          # `labels:` entry, which does override the first.
+          #
+          # These values are stable for the lifetime of a pull request (only the
+          # image tag moves between commits), so if your Argo CD version folds
+          # commonLabels into selectors, the Deployment selector still never
+          # changes mid-PR and no immutable-field conflict arises. On 2.10+ you
+          # can set labelWithoutSelector: true to keep selectors out of it.
+          commonLabels:
+            environment: preview
+            pull-request: '{{ .number }}'
+      destination:
+        server: https://kubernetes.default.svc
+        # dev-[team]-[application]-pr-[number] — the dev namespace convention
+        # with a pull request suffix, which is what keeps it inside the
+        # existing dev-<team>-* AppProject wildcard.
+        namespace: 'dev-{{ index .path.segments 1 }}-{{ index .path.segments 2 }}-pr-{{ .number }}'
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        # CreateNamespace=true alone creates a namespace that Argo CD does not
+        # track, so closing the pull request would delete the workloads and
+        # leave an empty namespace behind forever — one per PR, accumulating.
+        # Declaring metadata here makes the Namespace a managed resource, so it
+        # is pruned with the Application.
+        managedNamespaceMetadata:
+          labels:
+            environment: preview
+            team: '{{ index .path.segments 1 }}'
+            pull-request: '{{ .number }}'
+        syncOptions:
+          - CreateNamespace=true
+          - ServerSideApply=true
+        retry:
+          limit: 5
+          backoff:
+            duration: 10s
+            factor: 2
+            maxDuration: 3m
