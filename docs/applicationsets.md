@@ -32,6 +32,8 @@ directories:
   - path: applications/*/*/overlays/prod
 ```
 
+![ApplicationSet scoping: two overlay directories match the glob and become Applications; base directories, preview.yaml files, deeper paths, absent directories and unknown environments are ignored](images/applicationset-scoping.svg)
+
 A `*` never matches a `/`, so the pattern matches exactly five path segments and
 can only land on a directory literally named `prod`, two levels below
 `applications/`. Consequences worth stating explicitly:
