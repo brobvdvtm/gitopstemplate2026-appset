@@ -6,17 +6,16 @@
 
 ## What they are here
 
-An ApplicationSet is a controller-side template: a *generator* produces a set of
+An ApplicationSet is a controller-side template: a *generator* prduces a set of
 parameters, and one Argo CD `Application` is rendered per parameter set. This
 repository runs **one ApplicationSet per environment, spanning every team** —
 not one per team.
 
-| File | Name | Generator | Produces |
+| File | Name | Generator | prduces |
 | ---- | ---- | --------- | -------- |
 | `applicationsets/dev.yaml` | `dev` | git directories, `applications/*/*/overlays/dev` | `dev-<team>-<app>` |
-| `applicationsets/integ.yaml` | `integ` | git directories, `applications/*/*/overlays/integ` | `integ-<team>-<app>` |
-| `applicationsets/nonprod.yaml` | `nonprod` | git directories, `applications/*/*/overlays/nonprod` | `nonprod-<team>-<app>` |
-| `applicationsets/prod.yaml` | `prod` | git directories, `applications/*/*/overlays/prod` | `prod-<team>-<app>` |
+| `applicationsets/acc.yaml` | `acc` | git directories, `applications/*/*/overlays/acc` | `acc-<team>-<app>` |
+| `applicationsets/prd.yaml` | `prd` | git directories, `applications/*/*/overlays/prd` | `prd-<team>-<app>` |
 | `applicationsets/preview.yaml` | `preview` | matrix: `applications/*/*/preview.yaml` × open labelled PRs | `preview-<team>-<app>-pr-<n>` |
 
 All five live in the `argocd` namespace, run `goTemplate: true` with
@@ -29,36 +28,36 @@ The whole selection logic is one glob:
 
 ```yaml
 directories:
-  - path: applications/*/*/overlays/prod
+  - path: applications/*/*/overlays/prd
 ```
 
 ![ApplicationSet scoping: two overlay directories match the glob and become Applications; base directories, preview.yaml files, deeper paths, absent directories and unknown environments are ignored](images/applicationset-scoping.svg)
 
 A `*` never matches a `/`, so the pattern matches exactly five path segments and
-can only land on a directory literally named `prod`, two levels below
+can only land on a directory literally named `prd`, two levels below
 `applications/`. Consequences worth stating explicitly:
 
 - **Membership is a directory, not a list.** Nothing enumerates applications.
-  Creating `applications/<team>/<app>/overlays/prod` enrols the app in prod;
+  Creating `applications/<team>/<app>/overlays/prd` enrols the app in prd;
   deleting it removes the Application.
 - **New teams need no ApplicationSet change.** The first `*` already matches any
   team directory. (They *do* need AppProjects — see
   [appprojects.md](appprojects.md).)
 - **An application is only in the environments it ships an overlay for.**
-  `devfront/whoami` has `overlays/dev` and `overlays/prod` only, so the `integ`
-  and `nonprod` ApplicationSets simply never see it. That is the promotion
+  `devfront/whoami` has `overlays/dev` and `overlays/prd` only, so the `acc`
+  and `nonprd` ApplicationSets simply never see it. That is the promotion
   model: no flag, no enable list, just the presence of a directory.
 
 ### Identity is positional
 
 The generator exposes the matched path as `.path.segments`. For
-`applications/devo/podinfo/overlays/prod` that is
-`[applications, devo, podinfo, overlays, prod]`, so the template reads:
+`applications/devo/podinfo/overlays/prd` that is
+`[applications, devo, podinfo, overlays, prd]`, so the template reads:
 
 ```yaml
-name:      'prod-{{ index .path.segments 1 }}-{{ index .path.segments 2 }}'
-project:   'prod-{{ index .path.segments 1 }}'
-namespace: 'prod-{{ index .path.segments 1 }}-{{ index .path.segments 2 }}'
+name:      'prd-{{ index .path.segments 1 }}-{{ index .path.segments 2 }}'
+project:   'prd-{{ index .path.segments 1 }}'
+namespace: 'prd-{{ index .path.segments 1 }}-{{ index .path.segments 2 }}'
 ```
 
 Index 1 is the team, index 2 is the application. Neither is read out of the
@@ -144,12 +143,12 @@ way to the running workloads:
 
 | You do | Effect |
 | ------ | ------ |
-| Delete `applications/<team>/<app>/overlays/prod` | `prod-<team>-<app>` deleted → its workloads and namespace pruned |
+| Delete `applications/<team>/<app>/overlays/prd` | `prd-<team>-<app>` deleted → its workloads and namespace pruned |
 | Delete the whole `applications/<team>/<app>/` | The app disappears from every environment at once |
-| Delete `applicationsets/prod.yaml` | `root-applicationsets` prunes the ApplicationSet → **every** prod Application cascade-deleted → every prod workload pruned |
+| Delete `applicationsets/prd.yaml` | `root-applicationsets` prunes the ApplicationSet → **every** prd Application cascade-deleted → every prd workload pruned |
 | `kubectl delete applicationset X --cascade=orphan` | ApplicationSet gone, Applications survive unowned |
 
-The third row is the dangerous one, and it is why `applicationsets/prod.yaml`
+The third row is the dangerous one, and it is why `applicationsets/prd.yaml`
 carries a commented-out escape hatch:
 
 ```yaml
@@ -228,7 +227,7 @@ Lifecycle points specific to previews:
 | Change | What to do |
 | ------ | ---------- |
 | New environment | Copy any `applicationsets/<env>.yaml`; replace the glob's env, the name, the `environment` label, the templated project prefix and the namespace prefix. Then add `projects/<team>/<env>.yaml` for **every** team. |
-| Gate prod behind manual approval | Delete the `automated:` block from `applicationsets/prod.yaml`. Applications are still generated; they just wait for an explicit sync. |
+| Gate prd behind manual approval | Delete the `automated:` block from `applicationsets/prd.yaml`. Applications are still generated; they just wait for an explicit sync. |
 | New team | Nothing here. Only `projects/<team>/` — see [appprojects.md](appprojects.md). |
 | New application | Nothing here. Only `applications/<team>/<app>/` — see [onboarding.md](onboarding.md). |
 
