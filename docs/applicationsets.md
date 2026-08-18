@@ -51,8 +51,8 @@ can only land on a directory literally named `prd`, two levels below
 ### Identity is positional
 
 The generator exposes the matched path as `.path.segments`. For
-`applications/devo/podinfo/overlays/prd` that is
-`[applications, devo, podinfo, overlays, prd]`, so the template reads:
+`applications/teama/podinfo/overlays/prd` that is
+`[applications, teama, podinfo, overlays, prd]`, so the template reads:
 
 ```yaml
 name:      'prd-{{ index .path.segments 1 }}-{{ index .path.segments 2 }}'
@@ -178,9 +178,9 @@ used when this repo consolidated from per-team ApplicationSets
 alone. It is a **matrix** of two generators:
 
 1. `files: applications/*/*/preview.yaml` — which applications opted in, and
-   which Azure DevOps repo holds their source. The file's keys
-   (`azureDevOpsProject`, `azureDevOpsRepo`, `image`) become template parameters.
-2. `pullRequest.azuredevops` — the open pull requests of *that* repo, filtered to
+   which Azure teamaps repo holds their source. The file's keys
+   (`azureteamapsProject`, `azureteamapsRepo`, `image`) become template parameters.
+2. `pullRequest.azureteamaps` — the open pull requests of *that* repo, filtered to
    those carrying the `preview` label, polled every `requeueAfterSeconds: 300`.
 
 ```mermaid
@@ -207,7 +207,7 @@ Lifecycle points specific to previews:
   use `head_short_sha_7` or `head_sha` otherwise. A mismatch is not an error, it
   is an `ImagePullBackOff`.
 - **Polling only, ~5 minutes.** The PR generator supports webhooks for GitHub and
-  GitLab, but not Azure DevOps. `requeueAfterSeconds: 300` *is* the feedback
+  GitLab, but not Azure teamaps. `requeueAfterSeconds: 300` *is* the feedback
   loop. Lowering it multiplies API calls by the number of opted-in repositories
   against a single PAT's rate limit.
 - **Namespaces are pruned on close.** `CreateNamespace=true` alone leaves an
