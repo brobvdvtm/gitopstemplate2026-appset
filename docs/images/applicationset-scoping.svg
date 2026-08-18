@@ -1,125 +1,722 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 876" width="1120" height="876" role="img" aria-labelledby="t d">
-  <title id="t">ApplicationSet scoping</title>
-  <desc id="d">The prod ApplicationSet selects overlays with the glob applications/*/*/overlays/prod. Two overlay directories match and become Applications; base directories, preview.yaml files, deeper paths, absent directories and unknown environments are ignored.</desc>
-
-  <defs>
-    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-      <path d="M 0 0 L 10 5 L 0 10 z" fill="#7bbd9c"/>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   viewBox="0 0 1120 876"
+   width="1120"
+   height="876"
+   role="img"
+   aria-labelledby="t d"
+   version="1.1"
+   id="svg60"
+   sodipodi:docname="applicationset-scoping.svg"
+   inkscape:version="1.3 (0e150ed6c4, 2023-07-21)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview60"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:zoom="2.076484"
+     inkscape:cx="560.08136"
+     inkscape:cy="322.42001"
+     inkscape:window-width="3840"
+     inkscape:window-height="2054"
+     inkscape:window-x="-11"
+     inkscape:window-y="-11"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg60" />
+  <title
+     id="t">ApplicationSet scoping</title>
+  <desc
+     id="d">The prod ApplicationSet selects overlays with the glob applications/*/*/overlays/prod. Two overlay directories match and become Applications; base directories, preview.yaml files, deeper paths, absent directories and unknown environments are ignored.</desc>
+  <defs
+     id="defs1">
+    <marker
+       id="arrow"
+       viewBox="0 0 10 10"
+       refX="9"
+       refY="5"
+       markerWidth="7"
+       markerHeight="7"
+       orient="auto-start-reverse">
+      <path
+         d="M 0 0 L 10 5 L 0 10 z"
+         fill="#7bbd9c"
+         id="path1" />
     </marker>
   </defs>
-
-  <rect x="0" y="0" width="1120" height="876" fill="#fbfbf9"/>
-
+  <rect
+     x="0"
+     y="0"
+     width="1120"
+     height="876"
+     fill="#fbfbf9"
+     id="rect1" />
   <!-- ============================ title ============================ -->
-  <text x="40" y="50" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif" font-size="27" font-weight="700" fill="#1a1a19">ApplicationSet scoping</text>
-  <text x="40" y="78" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif" font-size="14.5" fill="#65655f">One glob per environment is the entire selection logic. Membership is a directory, not a list.</text>
-
+  <text
+     x="40"
+     y="50"
+     font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif"
+     font-size="27"
+     font-weight="700"
+     fill="#1a1a19"
+     id="text1">ApplicationSet scoping</text>
+  <text
+     x="40"
+     y="78"
+     font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif"
+     font-size="14.5"
+     fill="#65655f"
+     id="text2">One glob per environment is the entire selection logic. Membership is a directory, not a list.</text>
   <!-- ============================ panel A: the glob ============================ -->
-  <rect x="40" y="98" width="1040" height="170" rx="10" fill="#ffffff" stroke="#e6e6df"/>
-  <text x="64" y="126" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif" font-size="11.5" font-weight="700" letter-spacing="1.4" fill="#9a9a92">THE GLOB — applicationsets/prod.yaml</text>
-
+  <rect
+     x="40"
+     y="98"
+     width="1040"
+     height="170"
+     rx="10"
+     fill="#ffffff"
+     stroke="#e6e6df"
+     id="rect2" />
+  <text
+     x="64"
+     y="126"
+     font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif"
+     font-size="11.5"
+     font-weight="700"
+     letter-spacing="1.4"
+     fill="#9a9a92"
+     id="text3">THE GLOB — applicationsets/prod.yaml</text>
   <!-- index ruler -->
-  <text x="140" y="152" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="10.5" fill="#b0b0a6">0</text>
-  <text x="268" y="152" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="10.5" fill="#b0b0a6">1</text>
-  <text x="352" y="152" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="10.5" fill="#b0b0a6">2</text>
-  <text x="463" y="152" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="10.5" fill="#b0b0a6">3</text>
-  <text x="586" y="152" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="10.5" fill="#b0b0a6">4</text>
-
+  <text
+     x="140"
+     y="152"
+     text-anchor="middle"
+     font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace"
+     font-size="10.5"
+     fill="#b0b0a6"
+     id="text4">0</text>
+  <text
+     x="268"
+     y="152"
+     text-anchor="middle"
+     font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace"
+     font-size="10.5"
+     fill="#b0b0a6"
+     id="text5">1</text>
+  <text
+     x="352"
+     y="152"
+     text-anchor="middle"
+     font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace"
+     font-size="10.5"
+     fill="#b0b0a6"
+     id="text6">2</text>
+  <text
+     x="463"
+     y="152"
+     text-anchor="middle"
+     font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace"
+     font-size="10.5"
+     fill="#b0b0a6"
+     id="text7">3</text>
+  <text
+     x="586"
+     y="152"
+     text-anchor="middle"
+     font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace"
+     font-size="10.5"
+     fill="#b0b0a6"
+     id="text8">4</text>
   <!-- segments -->
-  <rect x="64" y="160" width="152" height="42" rx="7" fill="#f3f3ef" stroke="#e0dfd7"/>
-  <text x="140" y="187" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="14.5" fill="#55554f">applications</text>
-  <text x="226" y="187" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="15" fill="#bdbdb3">/</text>
-
-  <rect x="236" y="160" width="64" height="42" rx="7" fill="#eaf0fd" stroke="#b8ccf3"/>
-  <text x="268" y="188" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="17" font-weight="700" fill="#2f5fd0">*</text>
-  <text x="310" y="187" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="15" fill="#bdbdb3">/</text>
-
-  <rect x="320" y="160" width="64" height="42" rx="7" fill="#eaf0fd" stroke="#b8ccf3"/>
-  <text x="352" y="188" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="17" font-weight="700" fill="#2f5fd0">*</text>
-  <text x="394" y="187" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="15" fill="#bdbdb3">/</text>
-
-  <rect x="404" y="160" width="118" height="42" rx="7" fill="#f3f3ef" stroke="#e0dfd7"/>
-  <text x="463" y="187" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="14.5" fill="#55554f">overlays</text>
-  <text x="532" y="187" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="15" fill="#bdbdb3">/</text>
-
-  <rect x="542" y="160" width="88" height="42" rx="7" fill="#fdf1e3" stroke="#f0cf9d"/>
-  <text x="586" y="187" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="14.5" font-weight="700" fill="#a86a15">prod</text>
-
+  <rect
+     x="64"
+     y="160"
+     width="152"
+     height="42"
+     rx="7"
+     fill="#f3f3ef"
+     stroke="#e0dfd7"
+     id="rect8" />
+  <text
+     x="140"
+     y="187"
+     text-anchor="middle"
+     font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace"
+     font-size="14.5"
+     fill="#55554f"
+     id="text9">applications</text>
+  <text
+     x="226"
+     y="187"
+     font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace"
+     font-size="15"
+     fill="#bdbdb3"
+     id="text10">/</text>
+  <rect
+     x="236"
+     y="160"
+     width="64"
+     height="42"
+     rx="7"
+     fill="#eaf0fd"
+     stroke="#b8ccf3"
+     id="rect10" />
+  <text
+     x="268"
+     y="188"
+     text-anchor="middle"
+     font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace"
+     font-size="17"
+     font-weight="700"
+     fill="#2f5fd0"
+     id="text11">*</text>
+  <text
+     x="310"
+     y="187"
+     font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace"
+     font-size="15"
+     fill="#bdbdb3"
+     id="text12">/</text>
+  <rect
+     x="320"
+     y="160"
+     width="64"
+     height="42"
+     rx="7"
+     fill="#eaf0fd"
+     stroke="#b8ccf3"
+     id="rect12" />
+  <text
+     x="352"
+     y="188"
+     text-anchor="middle"
+     font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace"
+     font-size="17"
+     font-weight="700"
+     fill="#2f5fd0"
+     id="text13">*</text>
+  <text
+     x="394"
+     y="187"
+     font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace"
+     font-size="15"
+     fill="#bdbdb3"
+     id="text14">/</text>
+  <rect
+     x="404"
+     y="160"
+     width="118"
+     height="42"
+     rx="7"
+     fill="#f3f3ef"
+     stroke="#e0dfd7"
+     id="rect14" />
+  <text
+     x="463"
+     y="187"
+     text-anchor="middle"
+     font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace"
+     font-size="14.5"
+     fill="#55554f"
+     id="text15">overlays</text>
+  <text
+     x="532"
+     y="187"
+     font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace"
+     font-size="15"
+     fill="#bdbdb3"
+     id="text16">/</text>
+  <rect
+     x="542"
+     y="160"
+     width="88"
+     height="42"
+     rx="7"
+     fill="#fdf1e3"
+     stroke="#f0cf9d"
+     id="rect16" />
+  <text
+     x="586"
+     y="187"
+     text-anchor="middle"
+     font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace"
+     font-size="14.5px"
+     font-weight="700"
+     fill="#a86a15"
+     id="text17">prd</text>
   <!-- segment annotations -->
-  <line x1="268" y1="204" x2="268" y2="216" stroke="#b8ccf3" stroke-width="1.5"/>
-  <text x="268" y="232" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif" font-size="12" fill="#2f5fd0">team</text>
-  <line x1="352" y1="204" x2="352" y2="216" stroke="#b8ccf3" stroke-width="1.5"/>
-  <text x="352" y="232" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif" font-size="12" fill="#2f5fd0">application</text>
-  <line x1="586" y1="204" x2="586" y2="216" stroke="#f0cf9d" stroke-width="1.5"/>
-  <text x="586" y="232" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif" font-size="12" fill="#a86a15">environment (literal)</text>
-
+  <line
+     x1="268"
+     y1="204"
+     x2="268"
+     y2="216"
+     stroke="#b8ccf3"
+     stroke-width="1.5"
+     id="line17" />
+  <text
+     x="268"
+     y="232"
+     text-anchor="middle"
+     font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif"
+     font-size="12"
+     fill="#2f5fd0"
+     id="text18">team</text>
+  <line
+     x1="352"
+     y1="204"
+     x2="352"
+     y2="216"
+     stroke="#b8ccf3"
+     stroke-width="1.5"
+     id="line18" />
+  <text
+     x="352"
+     y="232"
+     text-anchor="middle"
+     font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif"
+     font-size="12"
+     fill="#2f5fd0"
+     id="text19">application</text>
+  <line
+     x1="586"
+     y1="204"
+     x2="586"
+     y2="216"
+     stroke="#f0cf9d"
+     stroke-width="1.5"
+     id="line19" />
+  <text
+     x="586"
+     y="232"
+     text-anchor="middle"
+     font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif"
+     font-size="12"
+     fill="#a86a15"
+     id="text20">environment (literal)</text>
   <!-- notes -->
-  <text x="676" y="156" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif" font-size="13" fill="#42423d">A <tspan font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" fill="#2f5fd0">*</tspan> never matches a <tspan font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" fill="#55554f">/</tspan> — so the glob matches</text>
-  <text x="676" y="176" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif" font-size="13" fill="#42423d">exactly five segments. Never shallower, never deeper.</text>
-  <text x="676" y="212" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif" font-size="13" fill="#42423d">Team and application are read positionally:</text>
-  <text x="676" y="234" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12.5" fill="#2f5fd0">.path.segments 1</text>
-  <text x="806" y="234" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif" font-size="12.5" fill="#9a9a92">and</text>
-  <text x="840" y="234" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12.5" fill="#2f5fd0">.path.segments 2</text>
-
+  <text
+     x="676"
+     y="156"
+     font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif"
+     font-size="13"
+     fill="#42423d"
+     id="text21">A <tspan
+   font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace"
+   fill="#2f5fd0"
+   id="tspan20">*</tspan> never matches a <tspan
+   font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace"
+   fill="#55554f"
+   id="tspan21">/</tspan> — so the glob matches</text>
+  <text
+     x="676"
+     y="176"
+     font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif"
+     font-size="13"
+     fill="#42423d"
+     id="text22">exactly five segments. Never shallower, never deeper.</text>
+  <text
+     x="676"
+     y="212"
+     font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif"
+     font-size="13"
+     fill="#42423d"
+     id="text23">Team and application are read positionally:</text>
+  <text
+     x="676"
+     y="234"
+     font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace"
+     font-size="12.5"
+     fill="#2f5fd0"
+     id="text24">.path.segments 1</text>
+  <text
+     x="806"
+     y="234"
+     font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif"
+     font-size="12.5"
+     fill="#9a9a92"
+     id="text25">and</text>
+  <text
+     x="840"
+     y="234"
+     font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace"
+     font-size="12.5"
+     fill="#2f5fd0"
+     id="text26">.path.segments 2</text>
   <!-- ============================ matched ============================ -->
-  <text x="56" y="318" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif" font-size="11.5" font-weight="700" letter-spacing="1.4" fill="#1f7a4d">MATCHED</text>
-  <text x="146" y="318" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif" font-size="12.5" fill="#8a8a82">one Application generated per matching directory</text>
-  <text x="712" y="318" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif" font-size="11.5" font-weight="700" letter-spacing="1.4" fill="#9a9a92">APPLICATIONSET  prod</text>
-  <line x1="56" y1="328" x2="1056" y2="328" stroke="#ebebe4"/>
-
+  <text
+     x="56"
+     y="318"
+     font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif"
+     font-size="11.5"
+     font-weight="700"
+     letter-spacing="1.4"
+     fill="#1f7a4d"
+     id="text27">MATCHED</text>
+  <text
+     x="146"
+     y="318"
+     font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif"
+     font-size="12.5"
+     fill="#8a8a82"
+     id="text28">one Application generated per matching directory</text>
+  <text
+     x="712"
+     y="318"
+     font-family="'-apple-system', BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"
+     font-size="11.5px"
+     font-weight="700"
+     letter-spacing="1.4"
+     fill="#9a9a92"
+     id="text29">APPLICATIONSET prd</text>
+  <line
+     x1="56"
+     y1="328"
+     x2="1056"
+     y2="328"
+     stroke="#ebebe4"
+     id="line29" />
   <!-- row 1 -->
-  <rect x="56" y="338" width="560" height="54" rx="8" fill="#ecf6f0" stroke="#a9d8bf"/>
-  <text x="78" y="371" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#1f7a4d">✓</text>
-  <text x="100" y="371" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="14" fill="#16442e">applications/<tspan fill="#2f5fd0" font-weight="700">devo</tspan>/<tspan fill="#2f5fd0" font-weight="700">podinfo</tspan>/overlays/<tspan fill="#a86a15" font-weight="700">prod</tspan></text>
-  <line x1="624" y1="365" x2="700" y2="365" stroke="#7bbd9c" stroke-width="2" marker-end="url(#arrow)"/>
-  <rect x="712" y="338" width="344" height="54" rx="8" fill="#ffffff" stroke="#a9d8bf"/>
-  <text x="732" y="361" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13.5" font-weight="700" fill="#16442e">prod-devo-podinfo</text>
-  <text x="732" y="379" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="11.5" fill="#7d9b8b">project prod-devo · ns = app name</text>
-
+  <rect
+     x="56"
+     y="338"
+     width="560"
+     height="54"
+     rx="8"
+     fill="#ecf6f0"
+     stroke="#a9d8bf"
+     id="rect29" />
+  <text
+     x="78"
+     y="371"
+     font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif"
+     font-size="15"
+     font-weight="700"
+     fill="#1f7a4d"
+     id="text30">✓</text>
+  <text
+     x="100"
+     y="371"
+     font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace"
+     font-size="14px"
+     fill="#16442e"
+     id="text32">applications/teama/podinfo/overlays/prd</text>
+  <line
+     x1="624"
+     y1="365"
+     x2="700"
+     y2="365"
+     stroke="#7bbd9c"
+     stroke-width="2"
+     marker-end="url(#arrow)"
+     id="line32" />
+  <rect
+     x="712"
+     y="338"
+     width="344"
+     height="54"
+     rx="8"
+     fill="#ffffff"
+     stroke="#a9d8bf"
+     id="rect32" />
+  <text
+     x="732"
+     y="361"
+     font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace"
+     font-size="13.5px"
+     font-weight="700"
+     fill="#16442e"
+     id="text33">prd-teama-podinfo</text>
+  <text
+     x="732"
+     y="379"
+     font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace"
+     font-size="11.5px"
+     fill="#7d9b8b"
+     id="text34">project prd-teama · ns = app name</text>
   <!-- row 2 -->
-  <rect x="56" y="404" width="560" height="54" rx="8" fill="#ecf6f0" stroke="#a9d8bf"/>
-  <text x="78" y="437" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#1f7a4d">✓</text>
-  <text x="100" y="437" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="14" fill="#16442e">applications/<tspan fill="#2f5fd0" font-weight="700">devfront</tspan>/<tspan fill="#2f5fd0" font-weight="700">whoami</tspan>/overlays/<tspan fill="#a86a15" font-weight="700">prod</tspan></text>
-  <line x1="624" y1="431" x2="700" y2="431" stroke="#7bbd9c" stroke-width="2" marker-end="url(#arrow)"/>
-  <rect x="712" y="404" width="344" height="54" rx="8" fill="#ffffff" stroke="#a9d8bf"/>
-  <text x="732" y="427" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13.5" font-weight="700" fill="#16442e">prod-devfront-whoami</text>
-  <text x="732" y="445" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="11.5" fill="#7d9b8b">project prod-devfront · ns = app name</text>
-
+  <rect
+     x="56"
+     y="404"
+     width="560"
+     height="54"
+     rx="8"
+     fill="#ecf6f0"
+     stroke="#a9d8bf"
+     id="rect34" />
+  <text
+     x="78"
+     y="437"
+     font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif"
+     font-size="15"
+     font-weight="700"
+     fill="#1f7a4d"
+     id="text35">✓</text>
+  <text
+     x="100"
+     y="437"
+     font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace"
+     font-size="14px"
+     fill="#16442e"
+     id="text37">applications/teamb/nginx/overlays/prd</text>
+  <line
+     x1="624"
+     y1="431"
+     x2="700"
+     y2="431"
+     stroke="#7bbd9c"
+     stroke-width="2"
+     marker-end="url(#arrow)"
+     id="line37" />
+  <rect
+     x="712"
+     y="404"
+     width="344"
+     height="54"
+     rx="8"
+     fill="#ffffff"
+     stroke="#a9d8bf"
+     id="rect37" />
+  <text
+     x="732"
+     y="427"
+     font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace"
+     font-size="13.5px"
+     font-weight="700"
+     fill="#16442e"
+     id="text38">prd-teamb-nginx</text>
+  <text
+     x="732"
+     y="445"
+     font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace"
+     font-size="11.5px"
+     fill="#7d9b8b"
+     id="text39">project prd-teamb · ns = app name</text>
   <!-- ============================ ignored ============================ -->
-  <text x="56" y="500" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif" font-size="11.5" font-weight="700" letter-spacing="1.4" fill="#86867e">IGNORED</text>
-  <text x="146" y="500" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif" font-size="12.5" fill="#8a8a82">everything else in the tree — the prod ApplicationSet never sees it</text>
-  <line x1="56" y1="510" x2="1056" y2="510" stroke="#ebebe4"/>
-
-  <rect x="56" y="522" width="1000" height="44" rx="8" fill="#f4f4f0" stroke="#e4e4dc"/>
-  <text x="78" y="550" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif" font-size="13" fill="#b5b5aa">✕</text>
-  <text x="100" y="550" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13.5" fill="#6d6d65">applications/devo/podinfo/overlays/<tspan font-weight="700" fill="#8a8a80">{dev,integ,nonprod}</tspan></text>
-  <text x="596" y="550" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif" font-size="12.5" fill="#8a8a82">segment 4 is not <tspan font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace">prod</tspan> — the other three ApplicationSets take these</text>
-
-  <rect x="56" y="574" width="1000" height="44" rx="8" fill="#f4f4f0" stroke="#e4e4dc"/>
-  <text x="78" y="602" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif" font-size="13" fill="#b5b5aa">✕</text>
-  <text x="100" y="602" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13.5" fill="#6d6d65">applications/devo/podinfo/<tspan font-weight="700" fill="#8a8a80">base</tspan></text>
-  <text x="596" y="602" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif" font-size="12.5" fill="#8a8a82">only four segments — no <tspan font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace">overlays/</tspan> level to match</text>
-
-  <rect x="56" y="626" width="1000" height="44" rx="8" fill="#f4f4f0" stroke="#e4e4dc"/>
-  <text x="78" y="654" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif" font-size="13" fill="#b5b5aa">✕</text>
-  <text x="100" y="654" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13.5" fill="#6d6d65">applications/devo/podinfo/<tspan font-weight="700" fill="#8a8a80">preview.yaml</tspan></text>
-  <text x="596" y="654" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif" font-size="12.5" fill="#8a8a82">a file, not a directory — read by the preview ApplicationSet</text>
-
-  <rect x="56" y="678" width="1000" height="44" rx="8" fill="#f4f4f0" stroke="#e4e4dc"/>
-  <text x="78" y="706" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif" font-size="13" fill="#b5b5aa">✕</text>
-  <text x="100" y="706" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13.5" fill="#6d6d65">applications/devo/podinfo/overlays/prod/<tspan font-weight="700" fill="#8a8a80">patches</tspan></text>
-  <text x="596" y="706" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif" font-size="12.5" fill="#8a8a82">six segments — a <tspan font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace">*</tspan> never crosses a <tspan font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace">/</tspan></text>
-
-  <rect x="56" y="730" width="1000" height="44" rx="8" fill="#f9f9f6" stroke="#e4e4dc" stroke-dasharray="5 4"/>
-  <text x="78" y="758" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif" font-size="13" fill="#b5b5aa">✕</text>
-  <text x="100" y="758" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13.5" fill="#a3a39a">applications/devfront/whoami/overlays/integ</text>
-  <text x="596" y="758" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif" font-size="12.5" fill="#8a8a82">directory does not exist — whoami ships dev and prod only</text>
-
-  <rect x="56" y="782" width="1000" height="44" rx="8" fill="#f4f4f0" stroke="#e4e4dc"/>
-  <text x="78" y="810" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif" font-size="13" fill="#b5b5aa">✕</text>
-  <text x="100" y="810" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13.5" fill="#6d6d65">applications/devo/podinfo/overlays/<tspan font-weight="700" fill="#8a8a80">staging</tspan></text>
-  <text x="596" y="810" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif" font-size="12.5" fill="#8a8a82">no <tspan font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace">applicationsets/staging.yaml</tspan> — deployed by nothing</text>
-
+  <text
+     x="56"
+     y="500"
+     font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif"
+     font-size="11.5"
+     font-weight="700"
+     letter-spacing="1.4"
+     fill="#86867e"
+     id="text40">IGNORED</text>
+  <text
+     x="146"
+     y="500"
+     font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif"
+     font-size="12.5"
+     fill="#8a8a82"
+     id="text41">everything else in the tree — the prod ApplicationSet never sees it</text>
+  <line
+     x1="56"
+     y1="510"
+     x2="1056"
+     y2="510"
+     stroke="#ebebe4"
+     id="line41" />
+  <rect
+     x="56"
+     y="522"
+     width="1000"
+     height="44"
+     rx="8"
+     fill="#f4f4f0"
+     stroke="#e4e4dc"
+     id="rect41" />
+  <text
+     x="78"
+     y="550"
+     font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif"
+     font-size="13"
+     fill="#b5b5aa"
+     id="text42">✕</text>
+  <text
+     x="100"
+     y="550"
+     font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace"
+     font-size="13.5px"
+     fill="#6d6d65"
+     id="text43">applications/teama/podinfo/overlays/{dev,acc}</text>
+  <text
+     x="596"
+     y="550"
+     font-family="'-apple-system', BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"
+     font-size="12.5px"
+     fill="#8a8a82"
+     id="text44">segment 4 is not prd — the other two ApplicationSets take these</text>
+  <rect
+     x="56"
+     y="574"
+     width="1000"
+     height="44"
+     rx="8"
+     fill="#f4f4f0"
+     stroke="#e4e4dc"
+     id="rect44" />
+  <text
+     x="78"
+     y="602"
+     font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif"
+     font-size="13"
+     fill="#b5b5aa"
+     id="text45">✕</text>
+  <text
+     x="100"
+     y="602"
+     font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace"
+     font-size="13.5px"
+     fill="#6d6d65"
+     id="text46">applications/teamb/podinfo/base</text>
+  <text
+     x="596"
+     y="602"
+     font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif"
+     font-size="12.5"
+     fill="#8a8a82"
+     id="text47">only four segments — no <tspan
+   font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace"
+   id="tspan46">overlays/</tspan> level to match</text>
+  <rect
+     x="56"
+     y="626"
+     width="1000"
+     height="44"
+     rx="8"
+     fill="#f4f4f0"
+     stroke="#e4e4dc"
+     id="rect47" />
+  <text
+     x="78"
+     y="654"
+     font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif"
+     font-size="13"
+     fill="#b5b5aa"
+     id="text48">✕</text>
+  <text
+     x="100"
+     y="654"
+     font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace"
+     font-size="13.5px"
+     fill="#6d6d65"
+     id="text49">applications/teama/podinfo/preview.yaml</text>
+  <text
+     x="596"
+     y="654"
+     font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif"
+     font-size="12.5"
+     fill="#8a8a82"
+     id="text50">a file, not a directory — read by the preview ApplicationSet</text>
+  <rect
+     x="56"
+     y="678"
+     width="1000"
+     height="44"
+     rx="8"
+     fill="#f4f4f0"
+     stroke="#e4e4dc"
+     id="rect50" />
+  <text
+     x="78"
+     y="706"
+     font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif"
+     font-size="13"
+     fill="#b5b5aa"
+     id="text51">✕</text>
+  <text
+     x="100"
+     y="706"
+     font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace"
+     font-size="13.5px"
+     fill="#6d6d65"
+     id="text52">applications/teama/podinfo/overlays/prd/patches</text>
+  <text
+     x="596"
+     y="706"
+     font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif"
+     font-size="12.5"
+     fill="#8a8a82"
+     id="text53">six segments — a <tspan
+   font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace"
+   id="tspan52">*</tspan> never crosses a <tspan
+   font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace"
+   id="tspan53">/</tspan></text>
+  <rect
+     x="56"
+     y="730"
+     width="1000"
+     height="44"
+     rx="8"
+     fill="#f9f9f6"
+     stroke="#e4e4dc"
+     stroke-dasharray="5 4"
+     id="rect53" />
+  <text
+     x="78"
+     y="758"
+     font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif"
+     font-size="13"
+     fill="#b5b5aa"
+     id="text54">✕</text>
+  <text
+     x="100"
+     y="758"
+     font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace"
+     font-size="13.5px"
+     fill="#a3a39a"
+     id="text55">applications/teamb/whoami/overlays/acc</text>
+  <text
+     x="596"
+     y="758"
+     font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif"
+     font-size="12.5"
+     fill="#8a8a82"
+     id="text56">directory does not exist — whoami ships dev and prod only</text>
+  <rect
+     x="56"
+     y="782"
+     width="1000"
+     height="44"
+     rx="8"
+     fill="#f4f4f0"
+     stroke="#e4e4dc"
+     id="rect56" />
+  <text
+     x="78"
+     y="810"
+     font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif"
+     font-size="13"
+     fill="#b5b5aa"
+     id="text57">✕</text>
+  <text
+     x="100"
+     y="810"
+     font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace"
+     font-size="13.5px"
+     fill="#6d6d65"
+     id="text58">applications/teama/podinfo/overlays/staging</text>
+  <text
+     x="596"
+     y="810"
+     font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif"
+     font-size="12.5"
+     fill="#8a8a82"
+     id="text59">no <tspan
+   font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace"
+   id="tspan58">applicationsets/staging.yaml</tspan> — deployed by nothing</text>
   <!-- ============================ footnote ============================ -->
-  <text x="56" y="856" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif" font-size="12.5" fill="#8a8a82">Add the directory and the Application appears on the next scan; delete it and the Application — and its workloads — are pruned.</text>
+  <text
+     x="56"
+     y="856"
+     font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif"
+     font-size="12.5"
+     fill="#8a8a82"
+     id="text60">Add the directory and the Application appears on the next scan; delete it and the Application — and its workloads — are pruned.</text>
 </svg>
