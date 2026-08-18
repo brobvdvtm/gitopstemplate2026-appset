@@ -70,6 +70,71 @@ if [ "$found" -eq 0 ]; then
   exit 1
 fi
 
+# ---------------------------------------------------------------------------
+# Ephemeral pull request previews.
+#
+# applications/<team>/<app>/preview.yaml opts an application into
+# applicationsets/preview.yaml, which renders the app's dev overlay into
+# dev-<team>-<app>-pr-<number> with the image re-tagged to the PR's commit.
+#
+# These are FAILURES, not warnings, and the blast radius is why: the preview
+# ApplicationSet runs with missingkey=error and one matrix generator spanning
+# every team, so a single malformed preview.yaml does not just break its own
+# application — it fails the generator and takes every other team's previews
+# down with it.
+# ---------------------------------------------------------------------------
+preview_found=0
+preview_bad=0
+
+while IFS= read -r manifest; do
+  preview_found=$((preview_found + 1))
+  app_dir="$(dirname "$manifest")"
+  app="$(basename "$app_dir")"
+  team="$(basename "$(dirname "$app_dir")")"
+  this_bad=0
+
+  # Keys consumed by applicationsets/preview.yaml. Matched loosely on purpose:
+  # this only proves the key is present and non-empty, which is exactly the
+  # class of mistake missingkey=error turns into an outage.
+  for key in azureDevOpsProject azureDevOpsRepo image; do
+    if ! grep -Eq "^${key}:[[:space:]]*[^[:space:]#]" "$manifest"; then
+      printf '  FAIL  %s -> missing or empty required key `%s`\n' "$manifest" "$key"
+      this_bad=$((this_bad + 1))
+    fi
+  done
+
+  # Previews render the dev overlay rather than an overlay of their own, so an
+  # opted-in application without one generates Applications that cannot sync.
+  if [ ! -d "${app_dir}/overlays/dev" ]; then
+    printf '  FAIL  %s -> no overlays/dev; previews render the dev overlay\n' "$manifest"
+    this_bad=$((this_bad + 1))
+  fi
+
+  # A namespace is capped at 63 characters, and unlike the fixed
+  # <env>-<team>-<app> names this one grows with the PR counter. Budget six
+  # digits so the failure lands here at review time rather than months from now
+  # when the counter rolls over to five figures and previews silently stop.
+  ns_prefix="dev-${team}-${app}-pr-"
+  ns_worst=$(( ${#ns_prefix} + 6 ))
+  if [ "$ns_worst" -gt 63 ]; then
+    printf '  FAIL  %s -> namespace %s<n> reaches %d chars, over the 63 limit\n' \
+      "$manifest" "$ns_prefix" "$ns_worst"
+    this_bad=$((this_bad + 1))
+  fi
+
+  if [ "$this_bad" -eq 0 ]; then
+    printf '  ok    %-52s -> namespace %s<n>\n' "$manifest" "$ns_prefix"
+  fi
+  preview_bad=$((preview_bad + this_bad))
+done < <(find applications -mindepth 3 -maxdepth 3 -type f -path 'applications/*/*/preview.yaml' | sort)
+
+# Same class of silent no-op as an overlay with no ApplicationSet: the opt-in
+# file is there, and nothing consumes it.
+if [ "$preview_found" -gt 0 ] && [ ! -f applicationsets/preview.yaml ]; then
+  printf '  WARN  %d preview.yaml file(s) but no applicationsets/preview.yaml\n' "$preview_found"
+  preview_bad=$((preview_bad + 1))
+fi
+
 echo
 if [ "$missing_appset" -gt 0 ]; then
   echo "$missing_appset overlay(s) target an environment with no ApplicationSet" >&2
@@ -77,11 +142,14 @@ fi
 if [ "$missing_project" -gt 0 ]; then
   echo "$missing_project team/environment pair(s) are missing an AppProject" >&2
 fi
+if [ "$preview_bad" -gt 0 ]; then
+  echo "$preview_bad problem(s) in preview.yaml opt-in file(s)" >&2
+fi
 if [ "$failed" -gt 0 ]; then
   echo "$failed of $found overlay(s) failed to build" >&2
   exit 1
 fi
-if [ "$missing_appset" -gt 0 ] || [ "$missing_project" -gt 0 ]; then
+if [ "$missing_appset" -gt 0 ] || [ "$missing_project" -gt 0 ] || [ "$preview_bad" -gt 0 ]; then
   exit 1
 fi
-echo "all $found overlay(s) built successfully"
+echo "all $found overlay(s) built successfully, $preview_found preview opt-in(s) valid"

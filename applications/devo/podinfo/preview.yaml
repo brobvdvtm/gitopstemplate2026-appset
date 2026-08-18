@@ -1,0 +1,30 @@
+# Opts this application into ephemeral pull request previews.
+#
+# Presence of this file is the whole opt-in: applicationsets/preview.yaml
+# discovers it with a `applications/*/*/preview.yaml` glob, exactly as the
+# environment ApplicationSets discover `overlays/<env>` directories. Delete the
+# file and the application stops getting previews.
+#
+# Team and application are NOT declared here. They stay positional in the
+# directory hierarchy (applications/<team>/<app>/preview.yaml), so an
+# application cannot claim a different team by editing its own file — the same
+# guarantee the environment ApplicationSets rely on.
+
+# Azure DevOps project and repository holding this application's SOURCE CODE.
+# This is the repo whose pull requests trigger previews; it is not this
+# manifest repo. The organization is set once in applicationsets/preview.yaml.
+azureDevOpsProject: CHANGEME-project
+azureDevOpsRepo: podinfo
+
+# Image to re-tag with the pull request's commit SHA.
+#
+# Two accepted forms, both passed straight to kustomize:
+#   <name>              tag is replaced, registry and repository kept
+#   <name>=<new-name>   registry/repository swapped too
+#
+# `<name>` must match the image name as written in base/deployment.yaml, or
+# kustomize silently matches nothing and the preview runs the base tag. Use the
+# second form when previews are built into a different registry than the one
+# the base manifests point at, e.g.
+#   image: ghcr.io/stefanprodan/podinfo=myorg.azurecr.io/devo/podinfo
+image: ghcr.io/stefanprodan/podinfo
