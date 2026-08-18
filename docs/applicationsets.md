@@ -231,4 +231,3 @@ Lifecycle points specific to previews:
 | New team | Nothing here. Only `projects/<team>/` — see [appprojects.md](appprojects.md). |
 | New application | Nothing here. Only `applications/<team>/<app>/` — see [onboarding.md](onboarding.md). |
 
-Run `./scripts/validate.sh` before committing any of it.
