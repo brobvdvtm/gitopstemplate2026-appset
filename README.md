@@ -5,6 +5,16 @@ Argo CD GitOps repository. Applications are defined once under
 environment has a **single** ApplicationSet that discovers and deploys the
 overlays belonging to it, across every team.
 
+## Documentation
+
+| Document | Covers |
+| -------- | ------ |
+| [docs/applicationsets.md](docs/applicationsets.md) | The five ApplicationSets, the discovery glob, and their full lifecycle — bootstrap, re-scan loops, ownership, cascade deletion and orphaning, plus the preview matrix generator. |
+| [docs/appprojects.md](docs/appprojects.md) | The policy plane owned by cluster admins: how an Application is bound to `<env>-<team>`, what the AppProject enforces, why projects are never generated, and how to tighten them. |
+| [docs/onboarding.md](docs/onboarding.md) | Step-by-step onboarding of a new application by an application team, promotion between environments, preview opt-in, offboarding, and a checklist. |
+
+The sections below are the quick reference; the documents above are the detail.
+
 ## Layout
 
 ```
@@ -12,6 +22,7 @@ applications/                      applications/<team>/<application>/
   devo/
     podinfo/
       base/                        environment-agnostic manifests
+      preview.yaml                 opts into ephemeral PR environments
       overlays/
         dev/                       deployed by applicationsets/dev.yaml
         integ/                     deployed by applicationsets/integ.yaml
@@ -27,6 +38,7 @@ applications/                      applications/<team>/<application>/
 applicationsets/                   one ApplicationSet per environment,
   dev.yaml  integ.yaml             spanning all teams
   nonprod.yaml  prod.yaml
+  preview.yaml                     ephemeral, one per open pull request
 
 projects/                          one AppProject per team per environment
   devo/     dev.yaml  integ.yaml  nonprod.yaml  prod.yaml
@@ -152,6 +164,90 @@ Copy any file in `applicationsets/`, replacing the environment name in the
 generator glob, the ApplicationSet name, the labels, the templated project, and
 the namespace prefix. Then add a `projects/<team>/<env>.yaml` for each team.
 
+## Ephemeral pull request environments
+
+`applicationsets/preview.yaml` gives every open pull request its own namespace,
+running that branch's build. It is the one ApplicationSet whose output is not a
+function of this repo alone — it is a **matrix** of (applications that opted in)
+× (their open pull requests in Azure DevOps).
+
+Opt an application in by adding one file next to its `base/`:
+
+```yaml
+# applications/devo/podinfo/preview.yaml
+azureDevOpsProject: CHANGEME-project
+azureDevOpsRepo: podinfo                  # repo holding the SOURCE CODE
+image: ghcr.io/stefanprodan/podinfo       # image name to re-tag
+```
+
+Pull request 42 then produces:
+
+| | |
+| ------------- | ---------------------------------------- |
+| Application   | `preview-devo-podinfo-pr-42`             |
+| namespace     | `dev-devo-podinfo-pr-42`                 |
+| AppProject    | `dev-devo`                               |
+| manifests     | `applications/devo/podinfo/overlays/dev` at `main` |
+| image         | `ghcr.io/stefanprodan/podinfo:<PR head short SHA>` |
+
+Three deliberate reuses keep this cheap:
+
+- **The dev overlay is rendered verbatim.** No ephemeral overlay is ever
+  committed, so previews cannot leave dead directories behind and the four
+  environment ApplicationSets are untouched. The image tag is overridden from
+  the Application, not from git.
+- **The dev AppProject is reused.** `projects/<team>/dev.yaml` already permits
+  `dev-<team>-*`, which covers `dev-<team>-<app>-pr-<n>`, so previews need no
+  AppProject and adding a team stays exactly as documented above. The tradeoff:
+  Argo CD RBAC over `dev-<team>/*` also grants control over that team's previews.
+- **Only `main` is ever a manifest source.** The pull request lives in the
+  application's source repo and contributes exactly one thing: a commit SHA.
+
+### What the build pipeline must do
+
+The ApplicationSet is gated on a pull request **label**, and that gate is what
+makes the whole thing work:
+
+1. Build and push `<image>:<8-char short SHA>` for the PR head commit.
+2. **Then** add the `preview` label to the pull request.
+
+In that order, an Application is never generated for an image that does not
+exist yet. Reverse it and the preview sits in `ImagePullBackOff` until the push
+lands. If your pipeline tags with 7 characters or the full SHA, change
+`head_short_sha` to `head_short_sha_7` or `head_sha` in the ApplicationSet — a
+mismatch is not an error, it is an `ImagePullBackOff`.
+
+### Things worth knowing
+
+- **Polling only, ~5 minutes.** The pull request generator supports webhooks for
+  GitHub and GitLab but not Azure DevOps, so `requeueAfterSeconds: 300` *is* the
+  feedback loop. Lowering it multiplies API calls by the number of opted-in
+  repositories against one PAT's rate limit.
+- **Namespaces are pruned.** `CreateNamespace=true` alone leaves an untracked
+  namespace behind on every closed PR; `managedNamespaceMetadata` makes the
+  Namespace a managed resource so it is deleted with the Application.
+- **`environment` is relabelled to `preview`.** The dev overlay stamps
+  `environment=dev` on everything it renders; the Application's `commonLabels`
+  overrides it so previews are not swept up by anything selecting on dev. A
+  kustomize `patch` cannot do this — the `labels:` transformer runs after
+  patches and stamps `dev` back over it.
+- **Application-level values still say `dev`.** Anything the dev overlay patches
+  into the manifests (for podinfo, `PODINFO_UI_MESSAGE: dev`) is inherited as-is.
+  Only the image, the namespace and the labels differ.
+- **No resource quota is applied.** Previews are unbounded until you add a
+  ResourceQuota, either into the dev overlay (where it would also apply to real
+  dev) or via `kustomize.patches` in `applicationsets/preview.yaml` only.
+
+### Setup
+
+Beyond the repo URL, `applicationsets/preview.yaml` has two extra placeholders
+(`CHANGEME-org`, and `CHANGEME-project` in each `preview.yaml`), plus a token:
+
+```bash
+kubectl create secret generic azure-devops-pat -n argocd \
+  --from-literal=token=<PAT with Code: Read on every opted-in repo>
+```
+
 ## Local validation
 
 ```bash
@@ -162,6 +258,14 @@ Renders every `applications/*/*/overlays/*` with kustomize (falling back to
 `kubectl kustomize`), prints the namespace each overlay will land in, and fails
 if an overlay names an environment that has no ApplicationSet or a
 team/environment pair that has no AppProject.
+
+It also checks every `applications/*/*/preview.yaml`: required keys present, an
+`overlays/dev` to render, and a `dev-<team>-<app>-pr-<n>` namespace that stays
+under 63 characters once the PR counter reaches six digits. These are hard
+failures rather than warnings because `applicationsets/preview.yaml` runs with
+`missingkey=error` across a single matrix generator spanning all teams — one
+malformed `preview.yaml` fails the generator and takes *every* team's previews
+with it, not just its own.
 
 ## Sync policy
 
